@@ -48,6 +48,7 @@ float rotation_velocity_left;
 float rotation_velocity_right;
 const float demand = 450; 
 unsigned long back_time;
+int time_len;
 
 void setup() {
   // Insert necessary initialising here.  e.g classes, pin modes
@@ -72,6 +73,7 @@ void loop() {
   updateState();
 
   kinematic.update();
+
 
   if( state == STATE_INITIAL ) {
     initializingBeeps();   
@@ -302,13 +304,15 @@ void rotateToOrigin() {
     prev_time = millis();
     left_pid.initialize(0.115,0.05,0);
     right_pid.initialize(0.115,0.05,0);
+    if (kinematic.Y_I > -500){
+      time_len = 12000;
+    }else {
+      time_len = 11000;
+    }
     stopRobot();
     back_time = millis();
     readyToBack = true;
   } else {
-    /*if (angle_to_origin > 0) {
-      motors.setMotorPower(-BiasPWM, BiasPWM);
-    } else {*/
       motors.setMotorPower(-BiasPWM, BiasPWM);
     //}
   }
@@ -317,7 +321,7 @@ void rotateToOrigin() {
 void goBack(){
   calculateRotationVelocity();
   float distance = sqrt(pow(kinematic.X_I, 2) + pow(kinematic.Y_I, 2));
-  if (millis() - back_time >11500){
+  if (millis() - back_time >time_len){
     stopRobot();
   }else if (distance > 25){
     float feedback_signal_left = left_pid.update(450, rotation_velocity_left);

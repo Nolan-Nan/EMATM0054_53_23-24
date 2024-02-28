@@ -1,3 +1,4 @@
+#include "Arduino.h"
 // this #ifndef stops this file
 // from being included mored than
 // once by the compiler. 
@@ -30,7 +31,7 @@ class PID_c {
       K_d = init_Kd;
       e = 0.0;
       e_sum = 0.0;
-      prev_time = 0;
+      prev_time = millis();
       prev_e = 0;
       p_term = 0.0;
       i_term = 0.0;
@@ -54,8 +55,7 @@ class PID_c {
       prev_time = current_time;
 
       // Return feedback signal
-      return p_term +i_term + d_term;
-      //return p_term +i_term;
+      return p_term + i_term + d_term;
     }
 
 };

@@ -5,7 +5,7 @@
 #include "pid.h"
 
 
-# define active_threshold 1000
+# define active_threshold 1100
 # define BiasPWM 25
 # define MaxTurnPWM 40
 # define BUZZER_PIN 6
@@ -131,7 +131,7 @@ void updateState() {
     case STATE_FOUND_LINE:
       // Check if the line is detected
       if (followLine) {
-        state = STATE_FOLLOW_LINE;
+        state = STATE_REDISCOVER;
       }
       break;
     case STATE_FOLLOW_LINE:
@@ -179,9 +179,8 @@ float weightedMeasurement(){
 
 void lineFollowing() {
   float W = weightedMeasurement();
-  if (lineDetected(4)){
+  if (lineDetected(4)&&!lineDetected(2)){
     motors.setMotorPower(BiasPWM, -BiasPWM);
-    delay(10);
   }else if(lineDetected(1) || lineDetected(3) || lineDetected(2)) {
     /*float feedback = heading_pid.update(0, W);
     int LeftPWM = BiasPWM + (feedback * MaxTurnPWM);
@@ -300,8 +299,8 @@ void rotateToOrigin() {
     prev_count_right = count_right;
     // Global variable to track time per iteration of loop()
     prev_time = millis();
-    left_pid.initialize(0.115,0.05,0);
-    right_pid.initialize(0.115,0.05,0);
+    left_pid.initialize(0.1,0.05,0);
+    right_pid.initialize(0.1,0.05,0);
     stopRobot();
     back_time = millis();
     readyToBack = true;

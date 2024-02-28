@@ -50,6 +50,9 @@ ISR( INT6_vect ) {
     }else{
       count_right += 0;
     }
+    Serial.print(count_left);
+    Serial.print(",");
+    Serial.println(count_right);
 
     // Shift the current readings (bits 3 and 2) down
     // into position 1 and 0 (to become prior readings)
@@ -101,6 +104,7 @@ ISR( PCINT0_vect ) {
     }else{
       count_left += 0;
     }
+    
 
     // Shift the current readings (bits 3 and 2) down
     // into position 1 and 0 (to become prior readings)

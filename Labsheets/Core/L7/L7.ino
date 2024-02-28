@@ -48,7 +48,7 @@ unsigned long prev_time = 0;
 // Global variable to store estimation of rotation velocity
 float rotation_velocity_left;
 float rotation_velocity_right;
-const float demand = 300; 
+const float demand = 450; 
 
 void setup() {
   // Setup encoders when the robot is
@@ -56,8 +56,8 @@ void setup() {
   motors.initialise();
   setupEncoder0();
   setupEncoder1();
-  left_pid.initialize(0.1,0.05,0.0001);
-  right_pid.initialize(0.1,0.05,0.0001);
+  left_pid.initialize(0.1,0.05,0);
+  right_pid.initialize(0.1,0.05,0);
   
   Serial.begin(9600);
   delay(1000);
@@ -79,22 +79,9 @@ void loop() {
   Serial.print(feedback_signal_left);
   Serial.print(",");
   Serial.println(feedback_signal_right);
-/*
-  motors.setMotorPower(20-feedback_signal_left,20-feedback_signal_right);
-  */
-
-
-/*
-  // Update low-pass filter for left wheel
-  lpf_left = (lpf_left * (1 - alpha)) + (rotation_velocity_left * alpha);
-
-  // Update low-pass filter for right wheel
-  lpf_right = (lpf_right * (1 - alpha)) + (rotation_velocity_right * alpha);
-  Serial.print(lpf_left);
-  Serial.print(",");
-  //Serial.print("Rotation Velocity Right: ");
-  Serial.println(lpf_right);*/
   motors.setMotorPower(feedback_signal_left,feedback_signal_right);
+
+  //motors.setMotorPower(feedback_signal_left,feedback_signal_right);
   // Store previous encoder counts for next iteration
   // Delay for stability (adjust as needed)
   delay(20); // 20ms interval as mentioned

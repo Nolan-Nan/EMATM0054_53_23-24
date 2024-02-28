@@ -88,8 +88,7 @@ float weightedMeasurement(){
 
 void lineFollowing() {
   float W = weightedMeasurement();
-   Serial.print(W);
-   Serial.print(",");
+   Serial.println(W);
   // Check if any of the sensors on the line
   if(lineDetected(1) || lineDetected(3) || lineDetected(2)) {
     float feedback = heading_pid.update(0, W);
@@ -99,6 +98,7 @@ void lineFollowing() {
     motors.setMotorPower( LeftPWM, RightPWM );
   }else {
     motors.setMotorPower( 0, 0);
+
   }
 }
 

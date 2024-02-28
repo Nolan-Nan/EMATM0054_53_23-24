@@ -12,10 +12,12 @@ class Kinematics_c {
     float theta_I=0;
     const float wheel_radius = 15.5; // Radius of wheels
     const float l = 42.5; // Distance between wheels
-    float CPR = 355;
+    float CPR_left = 362;
+    float CPR_right = 354;
     long previousCountLeft = 0;
     long previousCountRight = 0;
-    float mm_per_count = (2 * PI * wheel_radius) / CPR;
+    float mm_pc_left = (2 * PI * wheel_radius) / CPR_left;
+    float mm_pc_right = (2 * PI * wheel_radius) / CPR_right;
 
   
     // Constructor, must exist.
@@ -31,21 +33,23 @@ class Kinematics_c {
       float theta_R;
       long delta_left = count_left - previousCountLeft;
       long delta_right = count_right - previousCountRight;
-      float mean = (delta_left + delta_right)/2;
+      X_R = (delta_left * mm_pc_left + delta_right * mm_pc_right)/2;
+
+      theta_R = (delta_left * mm_pc_left - delta_right * mm_pc_right)/(2 * l) ;
       
-      X_R = mean * mm_per_count;
-      theta_R = (delta_left - delta_right) * mm_per_count/(2 * l) ;
       X_I += X_R * cos(theta_I);
       Y_I += X_R * sin(theta_I);
       theta_I += theta_R;
+      
       previousCountLeft = count_left;
       previousCountRight = count_right;
-      /*Serial.print( X_I );
+      
+      Serial.print( X_I );
       Serial.print(", ");
       Serial.print( Y_I );
       Serial.print(", ");
       Serial.print( theta_I );
-      Serial.println("");*/
+      Serial.println("");
     }
 
 };
